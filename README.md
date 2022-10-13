@@ -2,6 +2,14 @@
 
 Slackbot for for [Whisper as a Service](https://github.com/schibsted/WAAS)
 
+## Dependencies
+
+`$ npm run install --include=dev`
+
+## Testing
+
+`$ npm run test`
+
 ## Deploying
 
 #### Anywhere you want
