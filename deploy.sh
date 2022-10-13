@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+rm ./function.zip
 zip -q -r function.zip .
 
 aws lambda update-function-code \
