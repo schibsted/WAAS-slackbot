@@ -4,7 +4,7 @@
   "description": "Slack bot for Whisper as a Service",
   "main": "src/index.js",
   "scripts": {
-    "deploy": "./deploy.sh",
+    "deploy": "AWS_LAMBDA_NAME=slack-transcribe-bot ./deploy.sh",
     "test": "mocha"
   },
   "repository": {
