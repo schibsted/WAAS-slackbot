@@ -1,5 +1,5 @@
 exports.handler = async (event, context) => {
-  if (event.httpMethod == "POST") {
+  if (event.requestContext.http.method == "POST") {
     let json;
 
     try {

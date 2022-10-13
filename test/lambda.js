@@ -5,7 +5,11 @@ const { handler } = require('../lambda');
 describe('handler', () => {
   it('returns HTTP 400 on invalid JSON in request body', async () => {
     const response = await handler({
-      httpMethod: "POST",
+      requestContext: {
+        http: {
+          method: "POST"
+        }
+      },
       body: "{foo': bar"
     });
 
@@ -15,7 +19,11 @@ describe('handler', () => {
 
   it('responds to Slack API challenge', async () => {
     const response = await handler({
-      httpMethod: "POST",
+      requestContext: {
+        http: {
+          method: "POST"
+        }
+      },
       body: JSON.stringify({
         challenge: "foobar"
       })
