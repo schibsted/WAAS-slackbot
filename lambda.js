@@ -3,6 +3,8 @@ const { WebClient: Slack } = require("@slack/web-api");
 const slack = new Slack(process.env.SLACK_TOKEN);
 
 exports.handler = async (event, context) => {
+  console.log(event);
+
   if (event.requestContext.http.method == "POST") {
     let body = event.body;
     let json;
@@ -34,14 +36,14 @@ exports.handler = async (event, context) => {
       };
     }
 
-    if (json.type == "file_created") {
+    if (json.event.type == "file_shared") {
       const fileInfo = await slack.files.info({file: json.file_id});
 
       console.log(`File url_private_download: ${fileInfo.file.url_private_download}`);
 
       return {
         statusCode: 200,
-        body: "file_created event received"
+        body: "file_shared event received"
       }
     };
   }

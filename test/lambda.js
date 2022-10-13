@@ -68,15 +68,17 @@ describe('handler', () => {
         }
       },
       body: JSON.stringify({
-        type: "file_created",
-        file_id: "F2147483862",
-        file: {
-          id: "F2147483862"
+        event: {
+          type: "file_shared",
+          file_id: "F2147483862",
+          file: {
+            id: "F2147483862"
+          }
         }
       })
     });
 
-    assert.equal(response.body, "file_created event received");
+    assert.equal(response.body, "file_shared event received");
     assert.equal(response.statusCode, 200);
   });
 });
