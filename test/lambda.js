@@ -1,8 +1,11 @@
 const assert = require('assert');
+const nock = require('nock');
 
 const { handler } = require('../lambda');
 
 describe('handler', () => {
+  nock.disableNetConnect();
+
   it('returns HTTP 400 on invalid base64 in request body', async () => {
     const response = await handler({
       requestContext: {
@@ -49,6 +52,15 @@ describe('handler', () => {
   });
 
   it('responds to file_created events from Slack', async () => {
+    nock('https://slack.com')
+      .post('/api/files.info')
+      .reply(200, {
+        ok: true,
+        file: {
+          url_private_download: "https://.../tedair.gif"
+        }
+      });
+
     const response = await handler({
       requestContext: {
         http: {
