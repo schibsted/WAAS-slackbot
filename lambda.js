@@ -1,10 +1,18 @@
 exports.handler = async (event, context) => {
-  // Respond to challenge to verify bot with Slack
-  if (event.queryStringParameters.challenge) {
+  let json;
+
+  try {
+    json = JSON.parse(event.body);
+  } catch(error) {
     return {
-      statusCode: 200,
-      body: event.queryStringParameters.challenge
+      statusCode: 500,
+      body: "error: " + error
     };
-  }
+  };
+
+  return {
+    statusCode: 200,
+    body: json.challenge
+  };
 }
 
