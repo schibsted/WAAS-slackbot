@@ -39,7 +39,7 @@ exports.handler = async (event, context) => {
     if (json.event.type == "file_shared") {
       const fileInfo = await slack.files.info({file: json.event.file_id});
 
-      console.log(`File url_private_download: ${fileInfo.file.url_private_download}`);
+      console.log(`File url_private_download: ${fileInfo.file.url_private}`);
 
       return {
         statusCode: 200,
