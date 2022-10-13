@@ -1,3 +1,7 @@
+const { WebClient: Slack } = require("@slack/web-api");
+
+const slack = new Slack(process.env.SLACK_TOKEN);
+
 exports.handler = async (event, context) => {
   if (event.requestContext.http.method == "POST") {
     let body = event.body;
@@ -29,6 +33,18 @@ exports.handler = async (event, context) => {
         body: json.challenge
       };
     }
+
+    if (json.type == "file_created") {
+
+      const file = await slack.files.info({file: json.file_id});
+
+      console.log(`File url_private_download: ${file.url_private_download}`);
+
+      return {
+        statusCode: 200,
+        body: "file_created event received"
+      }
+    };
   }
 }
 

@@ -47,4 +47,24 @@ describe('handler', () => {
     assert.equal(response.body, "foobar");
     assert.equal(response.statusCode, 200);
   });
+
+  it('responds to file_created events from Slack', async () => {
+    const response = await handler({
+      requestContext: {
+        http: {
+          method: "POST"
+        }
+      },
+      body: JSON.stringify({
+        type: "file_created",
+        file_id: "F2147483862",
+        file: {
+          id: "F2147483862"
+        }
+      })
+    });
+
+    assert.equal(response.body, "file_created event received");
+    assert.equal(response.statusCode, 200);
+  });
 });
