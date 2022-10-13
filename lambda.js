@@ -1,18 +1,22 @@
 exports.handler = async (event, context) => {
-  let json;
+  if (event.httpMethod == "POST") {
+    let json;
 
-  try {
-    json = JSON.parse(event.body);
-  } catch(error) {
-    return {
-      statusCode: 500,
-      body: "error: " + error
-    };
-  };
+    try {
+      json = JSON.parse(event.body)
+    } catch(error) {
+      return {
+        statusCode: 400,
+        body: "Request body contains invalid JSON"
+      }
+    }
 
-  return {
-    statusCode: 200,
-    body: json.challenge
-  };
+    if (json.challenge) {
+      return {
+        statusCode: 200,
+        body: json.challenge
+      };
+    }
+  }
 }
 
