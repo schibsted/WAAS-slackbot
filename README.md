@@ -11,7 +11,7 @@ You can deploy this script anywhere that runs Node.
 #### AWS Lambda
 
 It's a particularly good fit for a Lambda. Create your lambda, set the environment variables,
-and configure the handler as lambda.handler. Then, run `AWS_LAMBDA_NAME=slack-slack-transcribe-bot ./deploy.sh`
+and configure the handler as lambda.handler. Then, run `AWS_LAMBDA_NAME=slack-transcribe-bot ./deploy.sh`
 to deploy it.
 
 If you haven't already, remember to install and configure your `aws` command line interface first:
