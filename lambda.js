@@ -1,6 +1,6 @@
 exports.handler = async (event, context) => {
   if (event.requestContext.http.method == "POST") {
-    let body;
+    let body = event.body;
     let json;
 
     if (event.isBase64Encoded) {
@@ -15,7 +15,7 @@ exports.handler = async (event, context) => {
     }
 
     try {
-      json = JSON.parse(event.body)
+      json = JSON.parse(body)
     } catch (error) {
       return {
         statusCode: 400,
