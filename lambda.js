@@ -41,9 +41,33 @@ exports.handler = async (event, context) => {
 
       console.log(`File url_private_download: ${fileInfo.file.url_private}`);
 
+      if (!["mp4", "mp3", "wav"].includes(fileInfo.file.fileType)) {
+        return {
+          statusCode: 406,
+          body: "file_shared event received, but file format not supported"
+        }
+      }
+
+      function changeExtension(file, extension) {
+        const basename = path.basename(file, path.extname(file))
+        return path.join(path.dirname(file), basename + extension)
+      }
+
+      await slack.chat.postMessage({
+        channel: json.event.channel_id,
+        text: "I noticed you posted an audio or video file, so I made subtitles for you!"
+      });
+
+      await slack.files.upload({
+        channels: json.event.channel_id,
+        title: changeExtension(fileInfo.file.name, ".srt"),
+        //title: fileInfo.file.name + ".srt",
+        content: "This is a dummy SRT file :)"
+      });
+
       return {
         statusCode: 200,
-        body: "file_shared event received"
+        body: "file_shared event received and handled"
       }
     };
   }
