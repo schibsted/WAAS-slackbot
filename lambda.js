@@ -1,3 +1,4 @@
+const path = require('path');
 const { WebClient: Slack } = require("@slack/web-api");
 
 const slack = new Slack(process.env.SLACK_TOKEN);
@@ -39,9 +40,11 @@ exports.handler = async (event, context) => {
     if (json.event.type == "file_shared") {
       const fileInfo = await slack.files.info({file: json.event.file_id});
 
-      console.log(`File url_private_download: ${fileInfo.file.url_private}`);
+      console.log(`slack.files.info: ${JSON.stringify(fileInfo)}`);
 
-      if (!["mp4", "mp3", "wav"].includes(fileInfo.file.fileType)) {
+      if (!["mp4", "mp3", "wav"].includes(fileInfo.file.filetype)) {
+        console.log("file_shared event received, but file format not supported");
+
         return {
           statusCode: 406,
           body: "file_shared event received, but file format not supported"
