@@ -68,7 +68,7 @@ exports.handler = async (event, context) => {
       await slack.files.upload({
         channels: json.event.channel_id,
         title: changeExtension(fileInfo.file.name, ".srt"),
-        content: createReadStream("./demo.srt")
+        file: createReadStream("./demo.srt")
       });
 
       return {
