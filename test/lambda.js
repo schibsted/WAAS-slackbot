@@ -90,7 +90,8 @@ describe('handler', () => {
         ok: true,
         file: {
           filetype: "mp4",
-          url_private_download: "https://.../tedair.mp4",
+          url_private_download: "https://files.slack.com/tedair.mp4",
+          mimetype: "video/mp4",
           name: "tedair.mp4"
         }
       });
@@ -106,6 +107,15 @@ describe('handler', () => {
       .reply(200, {
         ok: true
       });
+
+    nock("https://files.slack.com")
+      .get("/tedair.mp4")
+      .reply(200);
+
+    nock(process.env.WAAS_URL)
+      .post("/?model=large&task=translate")
+      .reply(200, "data string");
+
 
     const response = await handler({
       requestContext: {

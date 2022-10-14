@@ -1,5 +1,9 @@
 const path = require('path');
+const fetch = require('node-fetch');
+const FormData = require('form-data');
 const { WebClient: Slack } = require("@slack/web-api");
+const fs = require('node:fs');
+const { createReadStream } = require('node:fs');
 
 const slack = new Slack(process.env.SLACK_TOKEN);
 
@@ -59,6 +63,26 @@ exports.handler = async (event, context) => {
       await slack.chat.postMessage({
         channel: json.event.channel_id,
         text: "I noticed you posted an audio or video file, so I'm making subtitles for you!"
+      });
+
+      // Download the file
+      response = await fetch(fileInfo.file.url_private_download);
+      const fileStream = fs.createWriteStream("/tmp/audio");
+      await new Promise((resolve, reject) => {
+          response.body.pipe(fileStream);
+          response.body.on("error", reject);
+          fileStream.on("finish", resolve);
+        });
+
+      // Upload the file
+      const formData = new FormData();
+      const stream = createReadStream("/tmp/audio");
+      //const file = new fileFromSync("/tmp/audio", fileInfo.file.mimetype);
+      formData.append("file", stream, fileInfo.file.name);
+
+      response2 = await fetch(`${process.env.WAAS_URL}/?model=large&task=translate`, {
+        method: "post",
+        body: formData
       });
 
       await slack.files.upload({

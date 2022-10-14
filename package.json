@@ -8,13 +8,15 @@
     "test": "mocha"
   },
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/schibsted/waas-slackbot"
+    "type": "git",
+    "url": "https://github.com/schibsted/waas-slackbot"
   },
   "author": "Johannes Gorset <johannes.gorset@schibsted.com>",
   "license": "Apache-2.0",
   "dependencies": {
-    "@slack/web-api": "^6.7.2"
+    "@slack/web-api": "^6.7.2",
+    "node-fetch": "^2.6.7",
+    "undici": "^5.11.0"
   },
   "devDependencies": {
     "mocha": "^8.1.1",
