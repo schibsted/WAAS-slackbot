@@ -51,14 +51,60 @@ describe('handler', () => {
     assert.equal(response.statusCode, 200);
   });
 
+  it('responds to file_created events from Slack, and errors on invalid file types', async () => {
+    nock('https://slack.com')
+      .post('/api/files.info')
+      .reply(200, {
+        ok: true,
+        file: {
+          url_private_download: "https://.../tedair.mp4"
+        }
+      });
+
+    const response = await handler({
+      requestContext: {
+        http: {
+          method: "POST"
+        }
+      },
+      body: JSON.stringify({
+        event: {
+          type: "file_shared",
+          file_id: "F2147483862",
+          file: {
+            filetype: "srt",
+            id: "F2147483862"
+          }
+        }
+      })
+    });
+
+    assert.equal(response.body, "file_shared event received, but file format not supported");
+    assert.equal(response.statusCode, 406);
+  });
+
   it('responds to file_created events from Slack', async () => {
     nock('https://slack.com')
       .post('/api/files.info')
       .reply(200, {
         ok: true,
         file: {
-          url_private_download: "https://.../tedair.gif"
+          filetype: "mp4",
+          url_private_download: "https://.../tedair.mp4",
+          name: "tedair.mp4"
         }
+      });
+
+    nock("https://slack.com")
+      .post('/api/chat.postMessage')
+      .reply(200, {
+        ok: true
+      });
+
+    nock("https://slack.com")
+      .post('/api/files.upload')
+      .reply(200, {
+        ok: true
       });
 
     const response = await handler({
@@ -78,7 +124,7 @@ describe('handler', () => {
       })
     });
 
-    assert.equal(response.body, "file_shared event received");
+    assert.equal(response.body, "file_shared event received and handled");
     assert.equal(response.statusCode, 200);
   });
 });
