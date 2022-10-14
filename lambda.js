@@ -58,7 +58,7 @@ exports.handler = async (event, context) => {
 
       await slack.chat.postMessage({
         channel: json.event.channel_id,
-        text: "I noticed you posted an audio or video file, so I made subtitles for you!"
+        text: "I noticed you posted an audio or video file, so I'm making subtitles for you!"
       });
 
       await slack.files.upload({
