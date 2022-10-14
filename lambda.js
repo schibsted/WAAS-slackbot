@@ -65,31 +65,10 @@ exports.handler = async (event, context) => {
         text: "I noticed you posted an audio or video file, so I'm making subtitles for you!"
       });
 
-      // Download the file
-      response = await fetch(fileInfo.file.url_private_download);
-      const fileStream = fs.createWriteStream("/tmp/audio");
-      await new Promise((resolve, reject) => {
-          response.body.pipe(fileStream);
-          response.body.on("error", reject);
-          fileStream.on("finish", resolve);
-        });
-
-      // Upload the file
-      const formData = new FormData();
-      const stream = createReadStream("/tmp/audio");
-      //const file = new fileFromSync("/tmp/audio", fileInfo.file.mimetype);
-      formData.append("file", stream, fileInfo.file.name);
-
-      response2 = await fetch(`${process.env.WAAS_URL}/?model=large&task=translate`, {
-        method: "post",
-        body: formData
-      });
-
       await slack.files.upload({
         channels: json.event.channel_id,
         title: changeExtension(fileInfo.file.name, ".srt"),
-        //title: fileInfo.file.name + ".srt",
-        content: "This is a dummy SRT file :)"
+        content: createReadStream("./demo.srt")
       });
 
       return {
