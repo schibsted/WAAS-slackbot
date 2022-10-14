@@ -90,7 +90,7 @@ describe('handler', () => {
         ok: true,
         file: {
           filetype: "mp4",
-          url_private_download: "https://.../tedair.mp4",
+          url_private_download: "https://akamai.vgc.no/drfront/images/2022/10/14/c=0,401,4032,2626;w=1080;h=703;716869.jpg?format=auto",
           name: "tedair.mp4"
         }
       });
@@ -106,6 +106,11 @@ describe('handler', () => {
       .reply(200, {
         ok: true
       });
+
+    nock("https://waas.schibsted.io")
+      .post("/")
+      .query({task: "translate"})
+      .reply(200)
 
     const response = await handler({
       requestContext: {

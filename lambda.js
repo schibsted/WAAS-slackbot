@@ -1,4 +1,6 @@
 const path = require('path');
+const fs = require('fs');
+const undici = require('undici');
 const { WebClient: Slack } = require("@slack/web-api");
 
 const slack = new Slack(process.env.SLACK_TOKEN);
@@ -60,6 +62,20 @@ exports.handler = async (event, context) => {
         channel: json.event.channel_id,
         text: "I noticed you posted an audio or video file, so I'm making subtitles for you!"
       });
+
+
+      const { PassThrough } = require("stream");
+      const { createReadStream, createWriteStream } = require("fs");
+      console.log(fileInfo.file.url_private_download);
+      const readStream = await undici.stream([fileInfo.file.url_private_download, { method: "GET" }]);
+      const writeStream = await undici.stream(["http://localhost:8080", { method: "POST" }]);
+
+      const tunnel = new PassThrough();
+      tunnel.on("data", (chunk) => {
+        console.log("bytes:", chunk); // bytes: <Buffer 23 20 4a 61 76 61 53 63 72 69 70 74 20 41 6c 67 6f 72 69 74 68 6d 73 20 61 6e 64 20 44 61 74 61 20 53 74 72 75 63 74 75 72 65 73 0a 0a 54 68 69 73 20 ... 1767 more bytes>
+      });
+      readStream.pipe(tunnel).pipe(writeStream);
+
 
       await slack.files.upload({
         channels: json.event.channel_id,
