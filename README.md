@@ -10,6 +10,10 @@ Slackbot for for [Whisper as a Service](https://github.com/schibsted/WAAS)
 
 `$ npm run test`
 
+## Configuration
+
+Set environment variable `WAAS_URL` to the URL of your Whisper as a Service.
+
 ## Deploying
 
 #### Anywhere you want
